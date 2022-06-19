@@ -9,5 +9,12 @@ export default interface IStudent extends Document{
     shippingAddress:{
         city: string,
         street: string
-    }
+    },
+    productId: [string]
+    // productId: [
+    //     {
+    //         type: mongoose.Types.ObjectId,
+    //         ref: "products"
+    //     }
+    // ],
 }

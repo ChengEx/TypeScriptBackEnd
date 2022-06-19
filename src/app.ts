@@ -45,7 +45,7 @@ class App {
         //const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH } = process.env;
 
         mongoose.connect(
-            "mongodb+srv://denoriaaa:SQ3No7zNIIwTmSBI@cluster0.hnuu7.mongodb.net/ThesisDatabase?retryWrites=true&w=majority"
+            "mongodb+srv://denoriaaa:SQ3No7zNIIwTmSBI@cluster0.hnuu7.mongodb.net/SecondHandMarket?retryWrites=true&w=majority"
         ).then(()=>{
             Logging.info('Connected to mongoDB');
         })
