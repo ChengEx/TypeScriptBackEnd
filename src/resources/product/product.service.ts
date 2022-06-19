@@ -27,10 +27,7 @@ class ProductService {
                     status
                 }
             });
-            console.log(addProductObj);
-            const returnAddObj = addProductObj.toObject();
-            console.log(returnAddObj);
-            return returnAddObj;
+            return addProductObj;
         }catch(error: any){
             return new Error(error.message);
         }
