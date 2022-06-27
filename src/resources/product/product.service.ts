@@ -4,8 +4,13 @@ class ProductService {
     private productModel = ProductModel;
 
     public async getAllProduct():Promise<Array<object> | Error> {
-        const productArray = await this.productModel.find();
-        return productArray;
+        try{
+            const productArray = await this.productModel.find();
+            return productArray;
+        }catch(error: any){
+            return new Error(error.message);
+        }
+        
     }
 
     public async addProduct(

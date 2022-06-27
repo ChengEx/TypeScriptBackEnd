@@ -9,17 +9,22 @@ class StudentService {
         username: string,
         password: string
     ): Promise<object | Error> {
-        const oldUser = await this.studentModel.findOne({username});
-        if(!oldUser) throw new Error("Student doesn't exist");
+        try {
+            const oldUser = await this.studentModel.findOne({username});
+            if(!oldUser) throw new Error("Student doesn't exist");
 
-        const comparePassword = await bcrypt.compare(password, oldUser.password);
-        if(!comparePassword) throw new Error("wrong password!");
+            const comparePassword = await bcrypt.compare(password, oldUser.password);
+            if(!comparePassword) throw new Error("wrong password!");
 
-        const accessToken = token.createToken(oldUser);
+            const accessToken = token.createToken(oldUser);
 
-        let returnStudentObj = oldUser.toObject();
-        returnStudentObj.token = accessToken;
-        return returnStudentObj;
+            let returnStudentObj = oldUser.toObject();
+            returnStudentObj.token = accessToken;
+            return returnStudentObj;
+        }catch(error: any){
+            return new Error(error.message);
+        }
+        
     };
 
     public async register(
