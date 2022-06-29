@@ -8,11 +8,14 @@ class StudentService {
     public async login(
         username: string,
         password: string
-    ): Promise<object | Error> {
+    ): Promise<Object | Error> {
         try {
+            console.log(username,password);
             const oldUser = await this.studentModel.findOne({username});
+            console.log(oldUser);
             if(!oldUser) throw new Error("Student doesn't exist");
-
+            //if(!oldUser) return res.status(400).json({ message: "Invalid credentials" });
+            console.log("hi2");
             const comparePassword = await bcrypt.compare(password, oldUser.password);
             if(!comparePassword) throw new Error("wrong password!");
 
@@ -22,6 +25,7 @@ class StudentService {
             returnStudentObj.token = accessToken;
             return returnStudentObj;
         }catch(error: any){
+            console.log("hi");
             return new Error(error.message);
         }
         
@@ -31,7 +35,8 @@ class StudentService {
         username: string,
         password: string,
         name: string,
-        email:string
+        email:string,
+        phone: number
     ): Promise<object | Error> {
         try {
             const oldUser = await this.studentModel.findOne({username});
@@ -43,7 +48,8 @@ class StudentService {
                 username,
                 password: hashedPassword,
                 name,
-                email
+                email,
+                phone
             });
 
             const accessToken = token.createToken(user);

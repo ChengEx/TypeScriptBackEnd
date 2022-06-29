@@ -4,7 +4,8 @@ const register = Joi.object({
     username: Joi.string().max(30).required(),
     password: Joi.string().min(6).required(),
     name: Joi.string().max(30).required(),
-    email: Joi.string().email().required()
+    email: Joi.string().email().required(),
+    phone: Joi.string().min(6).max(30).required()
 });
 
 const login = Joi.object({

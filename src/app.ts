@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 //import morgan from 'morgan';
 import Controller from './utils/interfaces/controller.interface';
-//import ErrorMiddleware from '@/middleware/error.middleware';
+import ErrorMiddleware from './middleware/error.middleware';
 import helmet from 'helmet';
 import Logging from './library/logging'
 
@@ -19,7 +19,7 @@ class App {
         this.initialiseDatabaseConnection();
         this.initialiseMiddleware();
         this.initialiseControllers(controllers);
-        //this.initialiseErrorHandling();
+        this.initialiseErrorHandling();
     }
 
     private initialiseMiddleware(): void {
@@ -37,9 +37,9 @@ class App {
         });
     }
 
-    // private initialiseErrorHandling(): void {
-    //     this.express.use(ErrorMiddleware);
-    // }
+    private initialiseErrorHandling(): void {
+        this.express.use(ErrorMiddleware);
+    }
 
     private initialiseDatabaseConnection(): void {
         //const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH } = process.env;
