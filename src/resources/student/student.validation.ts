@@ -5,6 +5,7 @@ const register = Joi.object({
     password: Joi.string().min(6).required(),
     name: Joi.string().max(30).required(),
     email: Joi.string().email().required(),
+    gender: Joi.string().required(),
     phone: Joi.string().min(6).max(30).required()
 });
 
@@ -13,4 +14,7 @@ const login = Joi.object({
     password: Joi.string().required(),
 });
 
-export default { register, login };
+const getPersonalInformation = Joi.object({
+    _id: Joi.string().required()
+})
+export default { register, login, getPersonalInformation };

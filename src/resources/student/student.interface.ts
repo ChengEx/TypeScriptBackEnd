@@ -5,6 +5,7 @@ export default interface IStudent extends Document{
     password: string,
     name: string,
     email: string,
+    gender: string,
     phone: string,
     shippingAddress:{
         city: string,

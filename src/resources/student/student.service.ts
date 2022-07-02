@@ -10,12 +10,9 @@ class StudentService {
         password: string
     ): Promise<Object | Error> {
         try {
-            console.log(username,password);
             const oldUser = await this.studentModel.findOne({username});
-            console.log(oldUser);
             if(!oldUser) throw new Error("Student doesn't exist");
-            //if(!oldUser) return res.status(400).json({ message: "Invalid credentials" });
-            console.log("hi2");
+
             const comparePassword = await bcrypt.compare(password, oldUser.password);
             if(!comparePassword) throw new Error("wrong password!");
 
@@ -36,6 +33,7 @@ class StudentService {
         password: string,
         name: string,
         email:string,
+        gender: string,
         phone: number
     ): Promise<object | Error> {
         try {
@@ -49,6 +47,7 @@ class StudentService {
                 password: hashedPassword,
                 name,
                 email,
+                gender,
                 phone
             });
 
@@ -62,6 +61,82 @@ class StudentService {
             throw new Error(error.message);
         }
     }
+
+    public async getPersonalInformation(
+        _id: string
+    ): Promise<object | Error>{
+        try {
+            const studentObj = await this.studentModel.findById(_id);
+            let returnStudent = {}
+            if(studentObj !== null){
+                returnStudent = studentObj.toObject();
+            } 
+            return returnStudent;
+        }catch(error: any){
+            throw new Error(error.message);
+        }
+    }
+
+    public async updateInformation(
+        _id: string,
+        photo: string,
+        name: string,
+        email: string,
+        phone: string,
+        description: string
+    ): Promise<object | Error> {
+        try {
+            await this.studentModel.findByIdAndUpdate(
+                _id,{
+                    photo,
+                    name,
+                    email,
+                    phone,
+                    description
+                }
+            )
+            const beforeUpdateObj = await this.studentModel.findById(_id);
+
+            let returnObj = {}
+            if(beforeUpdateObj !== null){
+                returnObj = beforeUpdateObj.toObject();
+            } 
+            return returnObj;
+        }catch(error: any) {
+            throw new Error(error.message);
+        }
+    }
+
+    public async changePassword(
+        _id: string,
+        oldPassword: string,
+        newPassword: string
+    ):Promise<object | Error> {
+        try {
+            const changePasswordUser = await this.studentModel.findById({ _id });
+            if(!changePasswordUser) throw new Error("User doesn't exist");
+
+            const comparePassword = await bcrypt.compare(oldPassword, changePasswordUser?.password);
+            if(!comparePassword) throw new Error("Your password is not correct !");
+            
+            const hashedPassword = await bcrypt.hash(newPassword, 12)
+            const newPasswordObj = await this.studentModel.findByIdAndUpdate(
+                _id,{
+                    password: hashedPassword
+                }
+            )
+            let returnObj = {};
+            if(newPasswordObj !== null) {
+                returnObj = newPasswordObj.toObject();
+                //console.log(returnObj)
+            }
+            return returnObj;
+        }catch(error: any) {
+            throw new Error(error.message);
+        }
+    }
+
+
 }
 
 export default StudentService;

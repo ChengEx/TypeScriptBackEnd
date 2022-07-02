@@ -16,12 +16,26 @@ class StudentController implements IController {
             `${this.path}/login`,
             validationMiddleware(validate.login),
             this.login
-        )
+        );
         this.router.post(
             `${this.path}/register`,
             validationMiddleware(validate.register),
             this.register
         );
+        this.router.post(
+            `${this.path}/getPersonalInformation`,
+            validationMiddleware(validate.getPersonalInformation),
+            this.getPersonalInformation
+        );
+        this.router.post(
+            `${this.path}/updateInformation`,
+            this.updateInformation
+        );
+        this.router.post(
+            `${this.path}/changePassword`,
+            this.changePassword
+        )
+        
     }
     private login = async(req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
         try {
@@ -40,13 +54,14 @@ class StudentController implements IController {
     }
     private register = async(req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
         try {
-            const { username, password, name, email, phone } = req.body;
+            const { username, password, name, email, gender, phone } = req.body;
 
             const studentObj = await this.studentService.register(
                 username,
                 password,
                 name,
                 email,
+                gender,
                 phone
             );
             if(studentObj instanceof Error){
@@ -58,5 +73,56 @@ class StudentController implements IController {
             next(new HttpException(400, error.message));
         }
     };
+
+    private getPersonalInformation = async(req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+        try {
+            const { _id }  = req.body;
+            const studentObj = await this.studentService.getPersonalInformation(_id);
+            if(studentObj instanceof Error) {
+                throw new Error(studentObj.message);
+            }
+            res.status(201).json({ studentObj });
+        }catch(error: any){
+            next(new HttpException(400, error.message));
+        }
+    }
+
+    private updateInformation = async(req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+        try {
+            //console.log(req.body);
+            const { _id, photo, name, email, phone, description } = req.body;
+            const beforeUpdateObj = await this.studentService.updateInformation(
+                _id,
+                photo,
+                name,
+                email,
+                phone,
+                description
+            )
+            if(beforeUpdateObj instanceof Error){
+                throw new Error(beforeUpdateObj.message);
+            }
+            res.status(201).json({ beforeUpdateObj });
+        }catch(error: any) {
+            next(new HttpException(400, error.message));
+        }
+    }
+
+    private changePassword = async(req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+        try {
+            const { _id, oldPassword, newPassword } = req.body;
+            const returnObj = await this.studentService.changePassword(
+                _id,
+                oldPassword,
+                newPassword
+            )
+            if(returnObj instanceof Error){
+                throw new Error(returnObj.message);
+            }
+            res.status(201).json({ returnObj });
+        }catch(error: any){
+            next(new HttpException(400, error.message));
+        }
+    }
 }
 export default StudentController;

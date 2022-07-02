@@ -6,7 +6,10 @@ const StudentSchema:Schema = new Schema({
     password: { type: String, required: true },
     name: { type: String, required: true },
     email:{ type: String, required: true },
+    gender: { type: String, required: true },
     phone: { type: String, required: true },
+    description: { type: String},
+    photo: {type: String},
     shippingAddredd:{
         city:{ type: String },
         street:{ type: String }
