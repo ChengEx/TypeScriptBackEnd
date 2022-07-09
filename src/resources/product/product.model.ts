@@ -4,6 +4,7 @@ import IProduct from './product.interface';
 const ProductSchema: Schema = new Schema({
     name: { type: String, required: true },
     category: { type: String, required: true },
+    subcategory: { type: String, required: true },
     productDetail:{
         images: [ 
             {
@@ -14,6 +15,16 @@ const ProductSchema: Schema = new Schema({
         price: { type: Number, required: true },
         status: { type: String, required: true }
     },
+    createdBy: { 
+        type: mongoose.Types.ObjectId,
+        ref: "students"
+    }
+    // productId: [
+    //     {
+    //         type: mongoose.Types.ObjectId,
+    //         ref: "products"
+    //     }
+    // ],
 },
     { timestamps: true }
 )

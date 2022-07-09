@@ -14,11 +14,24 @@ class CategoryController implements IController {
         this.router.get(
             `${this.path}/getAll`,
             this.getAll
+        );
+        this.router.post(
+            `${this.path}/getCategoryByPath`,
+            this.getCategoryByPath
         )
     }
     private getAll = async(req: Request, res: Response, next: NextFunction): Promise<Response | void> =>{
         try {
             const categoryObj = await this.categoryService.getAll();
+            res.status(200).json({ categoryObj });
+        }catch(error: any){
+            next(new HttpException(400, error.message));
+        }
+    }
+    private getCategoryByPath = async(req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+        try {
+            const { path } = req.body;
+            const categoryObj = await this.categoryService.getCategoryByPath(path);
             res.status(200).json({ categoryObj });
         }catch(error: any){
             next(new HttpException(400, error.message));
